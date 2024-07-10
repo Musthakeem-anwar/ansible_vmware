@@ -1,0 +1,27 @@
+---
+- name: Pull VM List from vCenter
+  hosts: localhost
+  gather_facts: no
+  collections:
+    - community.vmware
+  tasks:
+    - name: Gather information about all VMs
+      vmware_vm_info:
+        hostname: "{{ vcenterhost }}"
+        username: "{{ username }}"
+        password: "{{ pass }}"
+        validate_certs: no
+      register: vm_info
+
+    - name: Extract and print VM guest names
+      set_fact:
+        vm_guest_names: "{{ vm_info.virtual_machines | map(attribute='guest_name') | list }}"
+    
+    - name: Print VM guest names
+      debug:
+        var: vm_guest_names
+
+
+
+
+

@@ -1,0 +1,26 @@
+---
+- name: vm disk demo
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - vars.yml
+  collections:
+    - community.vmware
+  tasks:
+    - name: expand disk in vm
+      vmware_guest_disk:
+        hostname: "{{ vcenterhost }}"
+        username: "{{ username }}"
+        password: "{{ pass }}"
+        validate_certs: "false"
+        datacenter: "{{ vcenter_datacenter }}"
+        name: "{{ machine_Name }}"
+        disk:
+          - size_gb: "{{ new_Size_Add }}" 
+            type: "thin"
+            datastore: "{{ vcenter_Datastore }}"
+            state: present
+            scsi_controller: "1"
+            unit_number: "1"
+            scsi_type: "paravirtual"
+            disk_mode: "persistent"

@@ -1,0 +1,19 @@
+---
+- name: Test vSphere Connection
+  hosts: localhost
+  gather_facts: no
+  collections:
+     - community.vmware
+  tasks:
+    - name: Gather facts about all hosts
+      vmware_datacenter_info:
+        hostname: "{{ vcenterhost }}"
+        username: "{{ username }}"
+        password: "{{ pass }}"
+        validate_certs: no
+      register: host_facts
+
+    - name: Print vSphere hosts
+      debug:
+        var: host_facts
+

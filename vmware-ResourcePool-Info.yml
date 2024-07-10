@@ -1,0 +1,26 @@
+---
+- name: Test vSphere Connection
+  hosts: localhost
+  gather_facts: true
+  collections:
+     - community.vmware
+
+  tasks:
+    - name: Gather facts about all hosts
+      vmware_resource_pool_info:
+        hostname: "{{ vcenterhost }}"
+        username: "{{ username }}"
+        password: "{{ pass }}"
+        validate_certs: no
+      register: resource_pool_info 
+
+    - name: Display the resource_pool info
+      debug: var=resource_pool_info
+
+    - name: Extract and print resource pool names
+      set_fact:
+        resource_pool_names: "{{ resource_pool_info.resource_pool_info | map(attribute='name') | list }}"
+
+    - name: Print resource pool names
+      debug:
+        var: resource_pool_names

@@ -1,0 +1,4 @@
+vcenter_datacenter: "QDS-Infra-DC"
+vcenter_cluster: "QDS-Infra-Cluster"
+vcenter_Datastore: "vsanDatastore"
+

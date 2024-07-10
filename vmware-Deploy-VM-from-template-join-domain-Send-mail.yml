@@ -1,0 +1,60 @@
+---
+- name: create vm demo
+  hosts: localhost
+  gather_facts: false
+  collections:
+    - community.vmware
+  pre_tasks:
+    - include_vars: vars.yml
+  tasks:
+    - name: create VM
+      vmware_guest:
+        hostname: "{{ vcenterhost }}"
+        username: "{{ username }}"
+        password: "{{ pass }}"
+        validate_certs: "{{ vcenter_validate_certs }}"
+        datacenter: "{{ vcenter_datacenter }}" 
+        state: "{{ vm_state }}" 
+        folder: "/QDS-Infra-DC/vm"
+        template: "Musthakeem-Linux"
+        name: "MMAnsible"
+        cluster: "{{ cluster_name }}"
+        datastore: "vsanDatastore"
+        customization:
+          dns_servers: "{{ vm_dns }}"
+          domain: "{{ domain_name }}"
+          domain_admin_user: "{{ domain_admin_user }}"
+          domain_admin_password: "{{ domain_admin_password }}"
+          hostname: "{{ vm_name }}"
+        state: powered_on
+      delegate_to: localhost
+      register: vm_info
+    
+    - name: Display VM details
+      set_fact:
+        vm_name: "{{ vm_info.instance.hw_name }}"
+        vm_ip: "{{ vm_info.instance.ipv4 }}"
+        vm_operating_system: "{{ vm_info.instance.hw_guest_full_name }}"
+        vm_cpu: "{{ vm_info.instance.hw_processor_count }}"
+        vm_ram: "{{ vm_info.instance.hw_memtotal_mb }}"  
+    
+    - name: Send mail
+      mail:
+        host: 10.20.23.5
+        port: 25
+        username:
+        password:
+        from:
+        to:
+        subject:
+        body: |
+          Hello,
+
+          A new VM has been provisioned with the following details:
+
+          VM Name: {{ vm_name }}
+          VM IP: {{ vm_ip }}
+          CPU: {{ vm_cpu }} vCPUs
+          RAM: {{ vm_ram }} MB
+          OS: {{ vm_operating_system }}  
+

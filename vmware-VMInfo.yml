@@ -1,0 +1,23 @@
+---
+- name: Get information of a specific VM in VMware VCenter and take a snapshot
+  hosts: localhost
+  gather_facts: no
+  pre_tasks:
+    - include_vars: vars.yml
+  collections:
+     - community.vmware
+  tasks:
+    - name: Gather facts about the specific VM
+      vmware_guest_info:
+        hostname: "{{ vcenterhost }}"
+        username: "{{ username }}"
+        password: "{{ pass }}"
+        validate_certs: no
+        name: "{{ machine_Name }}"
+        datacenter: "{{ vcenter_datacenter }}"
+      register: vm_info
+
+    - name: Print VM details
+      debug:
+        var: vm_info
+

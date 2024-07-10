@@ -1,0 +1,26 @@
+- name: VM Snapshort
+  hosts: localhost
+  gather_facts: true
+  pre_tasks:
+    - include_vars: vars.yml
+  collections:
+     - community.vmware
+
+  tasks:
+    - name:  Create a snapshot
+      vmware_guest_snapshot:   
+        hostname: "{{ vcenterhost }}"
+        username: "{{ username }}"
+        password: "{{ pass }}"
+        validate_certs: no
+        datacenter: "{{ vcenter_datacenter }}"
+        folder: "/QDS-Infra-DC/vm"   
+        uuid: "4213018d-076d-862a-509d-2febd52e9736"
+        name: "{{ machine_Name }}"
+        state: present
+        snapshot_name: "{{ snap_Name }}"
+        description: "{{ description_Msg }}"
+      delegate_to: localhost 
+
+
+

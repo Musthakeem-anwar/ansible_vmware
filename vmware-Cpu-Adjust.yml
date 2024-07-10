@@ -1,0 +1,19 @@
+---
+- name: Increase CPU in VMware VM
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Set VM CPU
+      community.vmware.vmware_guest:
+        hostname: "{{ vcenterhost }}"
+        username: "{{ username }}"
+        password: "{{ pass }}" 
+        validate_certs: no
+        datacenter: "{{ vcenter_datacenter }}"
+        cluster: "{{ vcenter_cluster }}"  # Optional, but useful
+        name: "{{ machine_Name }}"
+        hardware:
+          num_cpus: "{{ new_cpu_count }}"
+      delegate_to: localhost

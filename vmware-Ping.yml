@@ -1,0 +1,15 @@
+---
+-  name: Ping VMware VCenter
+   hosts: localhost
+   gather_facts: false
+   tasks:
+     - name: check VCenter API is reachable
+       uri:
+         url: "https://172.16.51.50/rest"
+         method: GET
+         validate_certs: no
+       register: restult
+
+     - name: Print the result
+       debug:
+         var: restult.status
