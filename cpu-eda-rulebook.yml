@@ -1,0 +1,15 @@
+---
+- name: Monitor Linux Server CPU Usage
+  hosts: all
+  # Use webhook to receive events from monitoring tools
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5000
+  rules:
+    - name: High CPU Usage Alert
+      condition: event.payload.cpu_usage > 80
+      action:
+        # Run a playbook to remediate the issue
+        run_playbook:
+          name: remediate_cpu.yml
